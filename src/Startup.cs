@@ -29,7 +29,7 @@ namespace src
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "src", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "one.identity.service", Version = "v1" });
             });
         }
 
@@ -40,7 +40,7 @@ namespace src
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "src v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "one.identity.service v1"));
             }
 
             app.UseRouting();
