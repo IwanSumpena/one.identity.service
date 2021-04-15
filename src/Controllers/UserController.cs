@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using src.Models.Entities;
 using src.Models.RequestModel;
 using src.Models.ResponseModel;
+using src.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace src.Controllers
             }
             return Ok(new OneResponse<IEnumerable<UserResponse>>()
             {
-                Status = "SUCCESS",
+                Status = AppConstans.Response_Status_Success,
                 Message = "Berhasil mengambil data.",
                 Data = userData
             });
@@ -49,7 +50,6 @@ namespace src.Controllers
             {
                 return BadRequest(new OneResponse<UserResponse>()
                 {
-                    Status = "failed",
                     Message = "Data ada yang kosong.",
                     Data = new UserResponse()
                 });
@@ -61,7 +61,7 @@ namespace src.Controllers
             {
                 return Ok(new OneResponse<UserResponse>()
                 {
-                    Status = "SUCCESS",
+                    Status = AppConstans.Response_Status_Success,
                     Message = "Berhasil mengambil data.",
                     Data = new UserResponse
                     {

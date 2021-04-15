@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using src.Models;
+using src.Models.Entities;
 
 namespace src
 {
@@ -22,6 +23,8 @@ namespace src
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<OneDbContext>(o=>o.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+
+            services.AddIdentity<UserOne, RoleOne>().AddEntityFrameworkStores<OneDbContext>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
