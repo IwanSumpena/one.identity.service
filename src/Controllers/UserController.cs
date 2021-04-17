@@ -21,7 +21,7 @@ namespace src.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet("User/Users")]
+        [HttpGet("User")]
         public async Task<ActionResult<OneResponse<IEnumerable<UserResponse>>>> Users()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -43,45 +43,40 @@ namespace src.Controllers
             });
         }
 
-        [HttpPost("User/Add")]
+        [HttpPost("User")]
         public async Task<ActionResult<OneResponse<UserResponse>>> Add([FromBody] UserRequest userRequest)
         {
-            if (string.IsNullOrEmpty(userRequest.Email) || string.IsNullOrEmpty(userRequest.Password))
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new OneResponse<UserResponse>()
                 {
-                    Message = "Data ada yang kosong.",
+                    Message = Helpers.GetModelStateError(ModelState),
                     Data = new UserResponse()
                 });
             }
 
             var userCreate = new UserOne { UserName = userRequest.Email, Email = userRequest.Email };
             var identityResult = await _userManager.CreateAsync(userCreate, userRequest.Password);
-            if (identityResult.Succeeded)
+            if (!identityResult.Succeeded)
             {
-                return Ok(new OneResponse<UserResponse>()
+                return BadRequest(new OneResponse<UserResponse>()
                 {
-                    Status = AppConstans.Response_Status_Success,
-                    Message = "Berhasil mengambil data.",
-                    Data = new UserResponse
-                    {
-                        Id = userCreate.Id,
-                        UserName = userCreate.UserName
-                    }
+                    Message = Helpers.GetIdentityResultError(identityResult),
+                    Data = new UserResponse()
                 });
             }
 
-            var error = String.Join(" ", identityResult.Errors.Select(p => p.Description).ToArray());
-
-            return BadRequest(new OneResponse<UserResponse>()
+            return Ok(new OneResponse<UserResponse>()
             {
-                Status = "FIELD",
-                Message = error,
-                Data = new UserResponse()
+                Status = AppConstans.Response_Status_Success,
+                Message = "Berhasil mengambil data.",
+                Data = new UserResponse
+                {
+                    Id = userCreate.Id,
+                    UserName = userCreate.UserName
+                }
             });
-
-
-
+            
         }
     }
 }
