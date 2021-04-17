@@ -36,7 +36,7 @@ namespace src.Controllers
             return Ok(new OneResponse<IEnumerable<RoleResponse>>()
             {
                 Status = AppConstans.Response_Status_Success,
-                Message = "Berhasil mengambil data.",
+                Message = AppConstans.Response_Message_Get_Success,
                 Data = roleData
             });
         }

@@ -38,7 +38,7 @@ namespace src.Controllers
             return Ok(new OneResponse<IEnumerable<UserResponse>>()
             {
                 Status = AppConstans.Response_Status_Success,
-                Message = "Berhasil mengambil data.",
+                Message = AppConstans.Response_Message_Get_Success,
                 Data = userData
             });
         }
@@ -69,7 +69,7 @@ namespace src.Controllers
             return Ok(new OneResponse<UserResponse>()
             {
                 Status = AppConstans.Response_Status_Success,
-                Message = "Berhasil menambahkan data.",
+                Message = AppConstans.Response_Message_Post_Success,
                 Data = new UserResponse
                 {
                     Id = userCreate.Id,
