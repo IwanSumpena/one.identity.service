@@ -69,7 +69,7 @@ namespace src.Controllers
             return Ok(new OneResponse<UserResponse>()
             {
                 Status = AppConstans.Response_Status_Success,
-                Message = "Berhasil mengambil data.",
+                Message = "Berhasil menambahkan data.",
                 Data = new UserResponse
                 {
                     Id = userCreate.Id,
