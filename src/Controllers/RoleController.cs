@@ -29,7 +29,7 @@ namespace src.Controllers
                 {
                     Id = item.Id,
                     RoleName = item.Name,
-                    Description=""
+                    Description=item.Description
                 };
                 roleData.Add(role);
             }
