@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace src.Models.ResponseModel
+﻿namespace src.Models.ResponseModel
 {
     public class UserResponse
     {
