@@ -76,5 +76,30 @@ namespace src.Controllers
             });
             
         }
+
+        [HttpGet("User/ById")]
+        public async Task<ActionResult<OneResponse<UserResponse>>> ById(string id)
+        {
+            var userIdentity = await _userManager.FindByIdAsync(id);
+            if (userIdentity == null)
+            {
+                return NotFound(new OneResponse<UserResponse>()
+                {
+                    Status = AppConstans.Response_Status_Failed,
+                    Message = AppConstans.Response_Message_Get_NotFound
+                });
+            }
+
+            return Ok(new OneResponse<UserResponse>()
+            {
+                Status = AppConstans.Response_Status_Success,
+                Message = AppConstans.Response_Message_Get_Success,
+                Data = new UserResponse
+                {
+                    Id = userIdentity.Id,
+                    UserName = userIdentity.UserName
+                }
+            });
+        }
     }
 }

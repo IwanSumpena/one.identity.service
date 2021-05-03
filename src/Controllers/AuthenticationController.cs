@@ -35,11 +35,9 @@ namespace src.Controllers
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            string referer = Request.Headers["Referer"].ToString();
-
             var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],
-            audience: !string.IsNullOrEmpty(referer) ? referer : _configuration["Jwt:Audience"],
+            audience: _configuration["Jwt:Audience"],
             claims: userInfo.Claims,
             expires: DateTime.Now.AddMinutes(Convert.ToInt32(_configuration["Jwt:expires_token"])),
             signingCredentials: credentials
