@@ -52,8 +52,8 @@ namespace src.Controllers
             {
                 return BadRequest(new OneResponse<UserResponse>()
                 {
-                    Message = Helpers.GetModelStateError(ModelState),
-                    Data = new UserResponse()
+                    Status=AppConstans.Response_Status_Failed,
+                    Message = Helpers.GetModelStateError(ModelState)
                 });
             }
 
