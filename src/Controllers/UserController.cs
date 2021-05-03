@@ -6,6 +6,7 @@ using src.Models.RequestModel;
 using src.Models.ResponseModel;
 using src.Utilities;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace src.Controllers
@@ -100,6 +101,32 @@ namespace src.Controllers
                     UserName = userIdentity.UserName
                 }
             });
+        }
+
+        [HttpGet("User/UserRoles")]
+        public async Task<ActionResult<OneResponse<List<string>>>> GetUserRoles(string id)
+        {
+            var userIdentity = await _userManager.FindByIdAsync(id);
+            if (userIdentity == null)
+            {
+                return NotFound(new OneResponse<UserResponse>()
+                {
+                    Status = AppConstans.Response_Status_Failed,
+                    Message = AppConstans.Response_Message_Get_NotFound,
+                    Data = new UserResponse()
+                });
+            }
+            else
+            {
+                var roles = await _userManager.GetRolesAsync(userIdentity);
+
+                return Ok(new OneResponse<List<string>>()
+                {
+                    Status = AppConstans.Response_Status_Success,
+                    Message = AppConstans.Response_Message_Get_Success,
+                    Data = roles.ToList()
+                });
+            }
         }
     }
 }

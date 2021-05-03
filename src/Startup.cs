@@ -29,8 +29,6 @@ namespace src
             //dbcontext
             services.AddDbContext<OneDbContext>(o=>o.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
 
-            services.AddIdentity<UserOne, RoleOne>().AddEntityFrameworkStores<OneDbContext>();
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -89,6 +87,10 @@ namespace src
             }
 
             app.UseRouting();
+
+            app.UseCors();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
