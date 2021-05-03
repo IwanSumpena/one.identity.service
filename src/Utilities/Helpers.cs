@@ -34,5 +34,7 @@ namespace src.Utilities
         {
             return String.Join(" ", identityResult.Errors.Select(p => p.Description).ToArray());
         }
+
+        
     }
 }
