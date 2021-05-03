@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using src.Models;
+using src.Models.Entities;
 
 namespace src
 {
@@ -13,7 +17,27 @@ namespace src
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<OneDbContext>();
+                    var userManager = services.GetRequiredService<UserManager<UserOne>>();
+                    var roleManager = services.GetRequiredService<RoleManager<RoleOne>>();
+                    var config = services.GetRequiredService<IConfiguration>();
+
+                    DbInitializer.Initialize(context, userManager, roleManager, config)
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    //Log.ForContext("EventSource", "Sistem Altius").Error("Terdapat eksepsi saat membuat data-data inisial ke dalam database." + " -- " + ex.Message);
+                }
+            }
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
