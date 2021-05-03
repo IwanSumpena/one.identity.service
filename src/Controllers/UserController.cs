@@ -7,6 +7,7 @@ using src.Models.ResponseModel;
 using src.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace src.Controllers
@@ -127,6 +128,34 @@ namespace src.Controllers
                     Data = roles.ToList()
                 });
             }
+        }
+
+        [HttpGet("User/UserClaims")]
+        public async Task<ActionResult<OneResponse<List<Claim>>>> GetUserClaims(string id)
+        {
+            var userIdentity = await _userManager.FindByIdAsync(id);
+            if (userIdentity == null)
+            {
+                return NotFound(new OneResponse<UserResponse>()
+                {
+                    Status = AppConstans.Response_Status_Failed,
+                    Message = AppConstans.Response_Message_Get_NotFound,
+                    Data = new UserResponse()
+                });
+            }
+            else
+            {
+                var claims = await _userManager.GetClaimsAsync(userIdentity);
+
+                return Ok(new OneResponse<List<Claim>>()
+                {
+                    Status = AppConstans.Response_Status_Success,
+                    Message = AppConstans.Response_Message_Get_Success,
+                    Data = claims.ToList()
+                });
+            }
+
+
         }
     }
 }
