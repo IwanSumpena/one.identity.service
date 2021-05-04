@@ -46,7 +46,7 @@ namespace src.Controllers
         }
 
         [HttpPost("User")]
-        public async Task<ActionResult<OneResponse<UserResponse>>> Add([FromBody] UserRequest userRequest)
+        public async Task<ActionResult<OneResponse<UserResponse>>> Add([FromBody] UserRequest bodyRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -57,8 +57,8 @@ namespace src.Controllers
                 });
             }
 
-            var userCreate = new UserOne { UserName = userRequest.Email, Email = userRequest.Email };
-            var identityResult = await _userManager.CreateAsync(userCreate, userRequest.Password);
+            var userCreate = new UserOne { UserName = bodyRequest.Email, Email = bodyRequest.Email };
+            var identityResult = await _userManager.CreateAsync(userCreate, bodyRequest.Password);
             if (!identityResult.Succeeded)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new OneResponse<UserResponse>()
@@ -221,14 +221,14 @@ namespace src.Controllers
         }
 
         [HttpPost("User/AddClaim")]
-        public async Task<ActionResult<OneResponse<object>>> AddClaim([FromBody] UserAddClaimRequest claimRequest)
+        public async Task<ActionResult<OneResponse<object>>> AddClaim([FromBody] UserAddClaimRequest bodyRequest)
         {
 
-            var user = await _userManager.FindByIdAsync(claimRequest.UserId);
+            var user = await _userManager.FindByIdAsync(bodyRequest.UserId);
             if (user != null)
             {
 
-                var identityResult = await _userManager.AddClaimAsync(user, new Claim(claimRequest.ClaimType, claimRequest.ClaimValue));
+                var identityResult = await _userManager.AddClaimAsync(user, new Claim(bodyRequest.ClaimType, bodyRequest.ClaimValue));
                 if (identityResult.Succeeded)
                 {
                     return Ok(new OneResponse<object>()
@@ -257,14 +257,14 @@ namespace src.Controllers
         }
 
         [HttpPost("User/AddRole")]
-        public async Task<ActionResult<OneResponse<object>>> AddRole([FromBody] UserAddRoleRequest roleReequest)
+        public async Task<ActionResult<OneResponse<object>>> AddRole([FromBody] UserAddRoleRequest bodyRequest)
         {
 
-            var user = await _userManager.FindByIdAsync(roleReequest.UserId);
+            var user = await _userManager.FindByIdAsync(bodyRequest.UserId);
             if (user != null)
             {
 
-                var identityResult = await _userManager.AddToRoleAsync(user, roleReequest.RoleName.ToUpper());
+                var identityResult = await _userManager.AddToRoleAsync(user, bodyRequest.RoleName.ToUpper());
                 if (identityResult.Succeeded)
                 {
                     return Ok(new OneResponse<IdentityResult>()
@@ -293,14 +293,14 @@ namespace src.Controllers
         }
 
         [HttpDelete("User/RemovRole")]
-        public async Task<ActionResult<OneResponse<object>>> RemoveUserFromRole([FromBody] UserAddRoleRequest roleReequest)
+        public async Task<ActionResult<OneResponse<object>>> RemoveUserFromRole([FromBody] UserAddRoleRequest bodyRequest)
         {
 
-            var user = await _userManager.FindByIdAsync(roleReequest.UserId);
+            var user = await _userManager.FindByIdAsync(bodyRequest.UserId);
             if (user != null)
             {
 
-                var identityResult = await _userManager.RemoveFromRoleAsync(user, roleReequest.RoleName.ToUpper());
+                var identityResult = await _userManager.RemoveFromRoleAsync(user, bodyRequest.RoleName.ToUpper());
                 if (identityResult.Succeeded)
                 {
                     return Ok(new OneResponse<IdentityResult>()
@@ -329,13 +329,13 @@ namespace src.Controllers
         }
 
         [HttpDelete("User/RemoveClaim")]
-        public async Task<ActionResult<OneResponse<object>>> RemoveClaimFromUser([FromBody] UserAddClaimRequest claimRequest)
+        public async Task<ActionResult<OneResponse<object>>> RemoveClaimFromUser([FromBody] UserAddClaimRequest bodyRequest)
         {
 
-            var user = await _userManager.FindByIdAsync(claimRequest.UserId);
+            var user = await _userManager.FindByIdAsync(bodyRequest.UserId);
             if (user != null)
             {
-                Claim claim = new Claim(claimRequest.ClaimType, claimRequest.ClaimValue);
+                Claim claim = new Claim(bodyRequest.ClaimType, bodyRequest.ClaimValue);
 
                 var identityResult = await _userManager.RemoveClaimAsync(user, claim);
                 if (identityResult.Succeeded)
@@ -453,11 +453,11 @@ namespace src.Controllers
         }
 
         [HttpPut("User/SetLockoutEnabledAsync")]
-        public async Task<ActionResult<OneResponse<object>>> SetLockoutEnabledAsync([FromBody] UserSetEnableLockoutRequest userRequest)
+        public async Task<ActionResult<OneResponse<object>>> SetLockoutEnabledAsync([FromBody] UserSetEnableLockoutRequest bodyRequest)
         {
 
             bool status = false;
-            switch (userRequest.StatusEnableLockout.ToLower())
+            switch (bodyRequest.StatusEnableLockout.ToLower())
             {
                 case "true":
                     status = true;
@@ -475,7 +475,7 @@ namespace src.Controllers
 
             }
 
-            var user = await _userManager.FindByIdAsync(userRequest.UserId);
+            var user = await _userManager.FindByIdAsync(bodyRequest.UserId);
             if (user != null)
             {
                 var identityResult = await _userManager.SetLockoutEnabledAsync(user, status);
@@ -506,13 +506,13 @@ namespace src.Controllers
         }
 
         [HttpPut("User/SetLockoutEndDateAsync")]
-        public async Task<ActionResult<OneResponse<object>>> SetLockoutEndDateAsync([FromBody] UserSetLockoutEndDateRequest userRequest)
+        public async Task<ActionResult<OneResponse<object>>> SetLockoutEndDateAsync([FromBody] UserSetLockoutEndDateRequest bodyRequest)
         {
 
-            var user = await _userManager.FindByIdAsync(userRequest.UserId);
+            var user = await _userManager.FindByIdAsync(bodyRequest.UserId);
             if (user != null)
             {
-                var identityResult = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now.AddDays(userRequest.UserLockOutEndDateFormDays));
+                var identityResult = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now.AddDays(bodyRequest.UserLockOutEndDateFormDays));
                 if (identityResult.Succeeded)
                 {
                     return Ok(new OneResponse<object>()
